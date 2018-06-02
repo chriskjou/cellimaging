@@ -2,10 +2,6 @@ import numpy as np
 import cv2
 from skimage.morphology import label, reconstruction
 import scipy.ndimage as ndimage
-import csv
-import os
-from math import floor
-import matplotlib.pyplot as plt
 
 IMG_WIDTH = 256
 IMG_HEIGHT = 256
@@ -183,71 +179,3 @@ def prob_to_rles(x, cutoff=0.5):
     lab_img = label(x > cutoff)
     for i in range(1, lab_img.max() + 1):
         yield rle_encoding(lab_img == i)
-
-# returns x,y location of center of the cell
-def screenshot(refpath):
-    flag = False
-    print("finding " + refpath + ".csv ...")
-
-    tofind = "csvs/" + refpath + ".csv"
-    centers = []
-    with open(tofind) as csvfile:
-        readCSV = csv.reader(csvfile, delimiter=',')
-        for row in readCSV:
-            if not flag:
-                flag = True
-            else:
-                xcoord = int(row[0])
-                ycoord = int(row[1])
-                centers.append((xcoord, ycoord))
-
-    return centers
-
-# no cutoff
-def centerofrle(rle, height, width):
-    toprint = []
-    area = height * width
-    xrows = []
-    ycolumns = []
-    for index in range(0, len(rle), 2):
-        pixelloc = int(rle[index])
-        pixelnum = int(rle[index+1])
-        if pixelloc <= area:
-            toprint.append(pixelloc)
-            for each in range(pixelnum):
-                centerpixel = pixelloc + each
-                xto = (centerpixel - 1) % height + 1
-                xrows.append(xto)
-                yto = floor((centerpixel - 1)/height) + 1
-                ycolumns.append(yto)
-        else:
-            break
-    midx = sum(xrows)/len(xrows)
-    midy = sum(ycolumns)/len(ycolumns)
-    return midy, midx
-    
-def updateDict(centercoords, cellcoords, height, width, cellradius = 70):
-    # img = cv2.imread("alteredimages.png")
-    # plt.imshow(img)
-    infectedlist = []
-
-    for each in cellcoords:
-        count = 0
-        lowerx = max(0, each[0] - cellradius)
-        higherx = min(width, each[0] + cellradius)
-
-        lowery = max(0, each[1] - cellradius)
-        highery = min(height, each[1] + cellradius)
-
-        for coord in centercoords:
-            xcoord = coord[0]
-            ycoord = coord[1]
-
-            if lowerx <= xcoord and xcoord <= higherx:
-                if lowery <= ycoord and ycoord <= highery:
-                    count += 1
-                    # plt.plot(xcoord, ycoord, 'ro')
-
-        infectedlist.append(count)
-    # plt.savefig('testlabels.jpg')
-    return infectedlist

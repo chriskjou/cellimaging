@@ -2,4 +2,6 @@
 *.png
 *.tiff
 *.tif
+*.jpg
+*.jpeg
 */*

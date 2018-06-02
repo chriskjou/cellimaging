@@ -34,6 +34,7 @@ def getCount(im):
     labelarray, particle_count = ndimage.measurements.label(im_thresholded)
     return particle_count
 
-addtoCSV(files)
+#addtoCSV(files)
 
-print("Finished writing to CSV...")
+#print("Finished writing to CSV...")
+

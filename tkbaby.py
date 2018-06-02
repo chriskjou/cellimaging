@@ -13,6 +13,7 @@ Version 4: eliminate image scaling
 """
 
 import os
+os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
 import sys
 import random
 import warnings
@@ -53,7 +54,7 @@ IMG_WIDTH = 256
 IMG_HEIGHT = 256
 IMG_CHANNELS = 3
 TRAIN_PATH = 'stage1_train/'
-TEST_PATH = 'stage2_test/'
+TEST_PATH = 'stage3_test/'
 
 warnings.filterwarnings('ignore', category=UserWarning, module='skimage')
 seed = 42
