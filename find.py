@@ -64,13 +64,11 @@ def foreachfile(endfolder, csvfolder):
     cells = []
     for i in files:
         cells.extend(cellcounts[i])
-    print("cellcounts")
-    print(cellcounts)
-
-    print("CELLS")
-    print(cells)
-    print(len(cells))
+    # print("cellcounts")
+    # print(cellcounts)
+    #
+    # print("CELLS")
+    # print(cells)
+    # print(len(cells))
 
     return cells
-
-print(foreachfile("boundary/*", "csv/*"))

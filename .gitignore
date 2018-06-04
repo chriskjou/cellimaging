@@ -4,4 +4,14 @@
 *.tif
 *.jpg
 *.jpeg
-*/*
+
+*old/*
+*media/*
+*images/*
+*infected/*
+*csvs/*
+*MOI1/*
+*MOI5/*
+*stage1_train/*
+*logs/*
+

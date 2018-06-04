@@ -117,11 +117,11 @@ def everything(imagefolder, csvfolder):
     print('reading ', len(sizes_test), ' of ', len(testfiles))
 
     print("reading previously saved model...\n")
-    json_file = open('mmodel'+str(image_class)+'.json', 'r')
+    json_file = open('models/mmodel'+str(image_class)+'.json', 'r')
     loaded_model_json = json_file.read()
     json_file.close()
     model = model_from_json(loaded_model_json)
-    model.load_weights("mmodel"+str(image_class)+".h5")
+    model.load_weights("models/mmodel"+str(image_class)+".h5")
 
     print("predicting based on the model...\n")
 

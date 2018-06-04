@@ -9,7 +9,7 @@ import time
 def callback():
     print("running cell counter...")
     print("Image Folder: " + folder_path.get())
-    print("CSV Folder: " + infected_folder_path.get())
+    print("Infected Folder: " + infected_folder_path.get())
     print("CSV Folder: " + csv_folder_path.get())
     t0 = time.time()
     endfolder = folder_path.get().split("/")[-1] + "/*"
