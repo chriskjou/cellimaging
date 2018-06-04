@@ -225,7 +225,7 @@ def centerofrle(rle, height, width):
     midx = sum(xrows)/len(xrows)
     midy = sum(ycolumns)/len(ycolumns)
     return midy, midx
-    
+
 def updateDict(centercoords, cellcoords, height, width, cellradius = 70):
     # img = cv2.imread("alteredimages.png")
     # plt.imshow(img)
@@ -251,3 +251,18 @@ def updateDict(centercoords, cellcoords, height, width, cellradius = 70):
         infectedlist.append(count)
     # plt.savefig('testlabels.jpg')
     return infectedlist
+
+def sliding_window(image, stepSize, windowSize):
+	# slide a window across the image
+	for y in range(0, image.shape[0], stepSize):
+		for x in range(0, image.shape[1], stepSize):
+			# yield the current window
+			yield (x, y, image[y:y + windowSize[1], x:x + windowSize[0]])
+
+def truncate(f, n):
+  # Truncates/pads a float f to n decimal places without rounding
+  s = '{}'.format(str(f))
+  if 'e' in s or 'E' in s:
+    return '{0:.{1}f}'.format(f, n)
+  i, p, d = s.partition('.')
+  return '.'.join([i, (d+'0'*n)[:n]])

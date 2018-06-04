@@ -195,13 +195,4 @@ def everything(imagefolder, csvfolder):
         cellnum.extend(generatenums)
         infected.extend(infectedperdropdict[i])
 
-    sub = pd.DataFrame()
-    sub['ImageId'] = imageids
-    sub['Cell #'] = cellnum
-    sub['Infected'] = infected
-    sub.to_csv('trialboundaries'+str(image_class)+'.csv', index=False)
-
-    csvname = 'trialboundaries' + str(image_class)+'.csv'
-
-    print("finished exporting to " + csvname + "csv...")
-    return 0
+    return imageids, cellnum, infected
