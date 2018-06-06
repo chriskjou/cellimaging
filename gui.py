@@ -1,23 +1,16 @@
 from tkinter import filedialog
 from tkinter import *
 import boundaries
-import find
 import pandas as pd
 from datetime import datetime
 import time
 
 def callback():
     print("Image Folder: " + folder_path.get())
-    # print("Infected Folder: " + infected_folder_path.get())
-    # print("CSV Folder: " + csv_folder_path.get())
     print("running...")
     t0 = time.time()
     folder = folder_path.get().split("/")[-1] + "/*"
-    # infectfolder = infected_folder_path.get().split("/")[-1] + "/*"
-    # csvfolder = csv_folder_path.get().split("/")[-1] + "/*"
     imageids, cellnums, infected, cells = boundaries.everything(folder)
-    # cellcount = find.foreachfile(folder, infectfolder, csvfolder, sizedict)
-    # imageids, cellnums, infected, cellcount = boundaries.everything(infectfolder, folder, csvfolder)
     returncsv(imageids, cellnums, infected, cells)
     t1 = time.time()
     print("total time: " + str(round(t1-t0)))
@@ -40,18 +33,6 @@ def browse_button():
     folder_path.set(filename)
     print(filename)
 
-def csvbrowse_button():
-    global csv_folder_path
-    csvfilename = filedialog.askdirectory()
-    csv_folder_path.set(csvfilename)
-    print(csvfilename)
-
-def infectedbrowse_button():
-    global infected_folder_path
-    infectedfilename = filedialog.askdirectory()
-    infected_folder_path.set(infectedfilename)
-    print(infectedfilename)
-
 root = Tk()
 
 folder_path = StringVar()
@@ -61,22 +42,6 @@ lbl1 = Label(master=root,textvariable=folder_path)
 lbl1.grid(row=0, column=1)
 button2 = Button(text="Browse", command=browse_button)
 button2.grid(row=0, column=3)
-
-# infected_folder_path = StringVar()
-# infected = Label(text="Select Infected Folder", font='Helvetica 13 bold')
-# infected.grid(row=1, column=0)
-# lbl2 = Label(master=root,textvariable=infected_folder_path)
-# lbl2.grid(row=1, column=1)
-# button3 = Button(text="Browse", command=infectedbrowse_button)
-# button3.grid(row=1, column=3)
-
-# csv_folder_path = StringVar()
-# csvs = Label(text="Select CSV Folder", font='Helvetica 13 bold')
-# csvs.grid(row=2, column=0)
-# lbl3 = Label(master=root,textvariable=csv_folder_path)
-# lbl3.grid(row=2, column=1)
-# button4 = Button(text="Browse", command=csvbrowse_button)
-# button4.grid(row=2, column=3)
 
 submit = Button(text="Submit", width=10, command=callback)
 submit.grid(row=1, column=3)

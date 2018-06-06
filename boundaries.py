@@ -55,21 +55,9 @@ def everything(imagefolder):
     IMG_HEIGHT = 256
     IMG_CHANNELS = 3
 
-    # TRAIN_PATH = 'stage1_train/'
-    # TEST_PATH = 'stage2_test/'
-    # testfiles = glob.glob("boundary/*")
-    # csvfiles = glob.glob("csvs/*")
     testfiles = glob.glob(imagefolder)
     testfiles = removeinfected(testfiles)
     print("TESTFILES: " + str(testfiles))
-
-    # print("TESTFILES: " + str(testfiles))
-    # print("CSVFILES: " + str(csvfiles))
-    # if len(testfiles) != len(csvfiles):
-    #     print("ERROR: make sure there is a corresponding csv to each image")
-
-    # testfiles = glob.glob("005/*")
-    # testfiles = ["corner4-512.png", "corner3-512.png", "corner2-512.png", "corner-512.png"]
 
     warnings.filterwarnings('ignore', category=UserWarning, module='skimage')
     seed = 42
@@ -157,7 +145,6 @@ def everything(imagefolder):
     filesdict = {}
     infectedperdropdict = {}
 
-    ### ADAPTED ###
     index = 0
     for each in testfiles:
         rle = list(H.prob_to_rles(preds_test_upsampled[index]))
@@ -183,39 +170,17 @@ def everything(imagefolder):
         center = H.centerofrle(rles[i], sizedict[name][0][0], sizedict[name][0][1])
         filesdict[name].append(center)
 
-    ## BEGIN ALTERED ###
     imageids = []
     cellnum = []
     infected = []
     cells = []
-    # start = normfolder.split("/")[-2]
     for i in files:
-        # append csv of centers #need to alter when more than one
-        # temp = i.split(".")
-        # imgnamefirst = temp[0]
-        # ending = temp[1]
-        # imgname = imgnamefirst.split("/")[-1]
-        # search = start + "/" + imgname + "." + ending
-        #
-        # imgnamefirst = i.split(".")[0]
-        # imgname = imgnamefirst.split("/")[-1]
-        # cellcoords, bounds = H.screenshot(imgname, sizedict[i][0])
-
         temp = i.split(".")[0]
         ending = i.split(".")[1]
         search = temp[:-3] + "1t" + temp[-1] + "." + ending
-        print("SEARCH")
-        print(search)
         cellcoords, bounds = getdropcenters(search, sizedict[i][0])
-        print("CELLCOORDS: ")
-        print(cellcoords)
-
-        print("bounds: ")
-        print(bounds)
         cells.extend(getbounds(search, bounds))
         infectedperdropdict[i] = H.updateDict(filesdict[i], cellcoords, bounds)
-        print("infectedperdropdict[i]: ")
-        print(infectedperdropdict[i])
         cellnums = len(infectedperdropdict[i])
         imageids.extend([i] * cellnums)
         generatenums = [j for j in range(1, cellnums + 1)]
@@ -225,44 +190,5 @@ def everything(imagefolder):
     # infectedperdropdict should be a dictionary
     # key: each image
     # value: dictionary where key is cell # and value is infected cell count
-    print("INFECTEDPERDROPDICT")
-    print(infectedperdropdict)
-
-    ## END ALTERED ###
-
-    # imageids = []
-    # cellnum = []
-    # infected = []
-    # cells = []
-    # start = normfolder.split("/")[-1]
-    # cellcounts = {}
-    #
-    # for i in files:
-    #     # append csv of centers # need to alter when more than one
-    #     print("TEST I: " + str(i))
-    #     temp = i.split(".")
-    #     imgnamefirst = temp[0]
-    #     ending = temp[1]
-    #     imgname = imgnamefirst.split("/")[-1]
-    #     cellcounts.setdefault(i, [])
-    #     cellcoords, bounds = H.screenshot(imgname, sizedict[i][0])
-    #
-    #     print("IMGNAME: " + str(imgname))
-    #     search = start + "/" + imgname + "." + ending
-    #     img = cv2.imread(search)
-    #
-    #     infectedperdropdict[i], counts = H.updateDict(filesdict[i], cellcoords, bounds, sizedict[i][0][0], sizedict[i][0][1], img)
-    #     cellnums = len(infectedperdropdict[i])
-    #     cellcount[i] = counts
-    #     imageids.extend([i] * cellnums)
-    #     generatenums = [j for j in range(1, cellnums + 1)]
-    #     cellnum.extend(generatenums)
-    #     infected.extend(infectedperdropdict[i])
-    #
-    # print("INFECTEDPERDROPDICT")
-    # print(infectedperdropdict)
 
     return imageids, cellnum, infected, cells
-
-# print(everything("infected/*", "csvs/*"))
-# print(everything("infectedtif/*", "csvs/*"))

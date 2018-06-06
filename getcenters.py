@@ -38,21 +38,13 @@ def getdropcenters(image, sizedict):
     #-- Find contours in edges, sort by area ---------------------------------------------
     contour_info = []
     _, contours, _ = cv2.findContours(edges, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
-
-    # cv2.drawContours(im, contours, -1, (0, 0, 255), 3)
-    # cv2.imshow("all contours", im)
-    # cv2.waitKey(0)
-
+    
     contours_area = []
     # calculate area and filter into new array
     for con in contours:
         area = cv2.contourArea(con)
         if 10000 < area < 25000:
             contours_area.append(con)
-
-    # cv2.drawContours(im, contours_area, -1, (0, 255, 0), 3)
-    # cv2.imshow("contour area", im)
-    # cv2.waitKey(0)
 
     contours_circles = []
 
@@ -66,12 +58,6 @@ def getdropcenters(image, sizedict):
         if 0.6 < circularity < 1.4:
             contours_circles.append(con)
 
-    # cv2.drawContours(im, contours_circles, -1, (255, 0, 0), 3)
-    # cv2.imshow("contours circles", im)
-    # cv2.waitKey(0)
-
-    # print("CONTOUR CIRCLS")
-    # print("CONTOUR CIRCLES LENGTH: " + str(len(contours_circles)))
     centers = []
     bounds = []
     plt.imshow(im)
@@ -90,7 +76,6 @@ def getdropcenters(image, sizedict):
             if abs(x-x1) < r and abs(y-y1) < r:
                 if actual[j] == 1:
                     actual[j] = 0
-    # print(actual)
 
     for c in range(length):
         if actual[c] == 1:
@@ -108,8 +93,4 @@ def getdropcenters(image, sizedict):
             count +=1
 
     plt.savefig("centers/centers" + datetime.now().strftime('%Y-%m-%d=%H-%M-%S') + ".jpg")
-    print(centers)
-    print("LENGTH OF CENTERS: " + str(len(centers)))
     return centers, bounds
-#
-# getdropcenters("trial.tif", (1040, 1392))

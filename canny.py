@@ -27,17 +27,7 @@ def getcellnum(image):
 	CANNY_THRESH_2 = 300 #200
 
 	contours, _ = canny(image, CANNY_THRESH_1, CANNY_THRESH_2)
-	# gray = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
-	#
-	# #-- Edge detection -------------------------------------------------------------------
-	# edges = cv2.Canny(gray, CANNY_THRESH_1, CANNY_THRESH_2)
-	# edges = cv2.dilate(edges, None)
-	# edges = cv2.erode(edges, None)
-	#
-	# #-- Find contours in edges, sort by area ---------------------------------------------
-	# contour_info = []
-	# _, contours, _ = cv2.findContours(edges, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
-
+	
 	contours_area = []
 	# calculate area and filter into new array
 	for con in contours:
@@ -59,16 +49,6 @@ def preprocess(img):
 
 	contour_info = []
 	contours, edges = canny(img, CANNY_THRESH_1, CANNY_THRESH_2)
-	# gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-	#
-	# # #-- Edge detection -------------------------------------------------------------------
-	# edges = cv2.Canny(gray, CANNY_THRESH_1, CANNY_THRESH_2)
-	# edges = cv2.dilate(edges, None)
-	# edges = cv2.erode(edges, None)
-	#
-	# #-- Find contours in edges, sort by area ---------------------------------------------
-	# contour_info = []
-	# _, contours, _ = cv2.findContours(edges, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
 
 	for c in contours:
 	    contour_info.append((
@@ -97,11 +77,7 @@ def preprocess(img):
 	masked = (mask_stack * img) + ((1-mask_stack) * MASK_COLOR) # Blend
 	masked = (masked * 255).astype('uint8')                     # Convert back to 8-bit
 
-	# cv2.imshow('img', masked)                                   # Display
-	# cv2.waitKey()
-	# cv2.imwrite('3canny' + str(args['image']), masked)
 	return getcellnum(masked)
-	#cv2.imwrite('C:/Temp/person-masked.jpg', masked)           # Save
 
 def getbounds(image, bounds):
 	img = cv2.imread(image)
