@@ -6,6 +6,9 @@ import csv
 import os
 from math import floor
 import matplotlib.pyplot as plt
+import classify
+import cv2
+import glob
 
 IMG_WIDTH = 256
 IMG_HEIGHT = 256
@@ -185,23 +188,32 @@ def prob_to_rles(x, cutoff=0.5):
         yield rle_encoding(lab_img == i)
 
 # returns x,y location of center of the cell
-def screenshot(refpath):
+def screenshot(refpath, sizedict, radius = 70):
+    height, width = sizedict[0], sizedict[1]
+    radius = 70
     flag = False
     print("finding " + refpath + ".csv ...")
 
     tofind = "csvs/" + refpath + ".csv"
     centers = []
+    bounds = []
     with open(tofind) as csvfile:
         readCSV = csv.reader(csvfile, delimiter=',')
         for row in readCSV:
             if not flag:
                 flag = True
             else:
-                xcoord = int(row[0])
-                ycoord = int(row[1])
+                xcoord = round(float(row[0]))
+                ycoord = round(float(row[1]))
                 centers.append((xcoord, ycoord))
 
-    return centers
+                lowerx = max(0, xcoord - radius)
+                higherx = min(width, xcoord + radius)
+                lowery = max(0, ycoord - radius)
+                highery = min(height, ycoord + radius)
+                bounds.append((lowerx, higherx, lowery, highery))
+
+    return centers, bounds
 
 # no cutoff
 def centerofrle(rle, height, width):
@@ -226,18 +238,64 @@ def centerofrle(rle, height, width):
     midy = sum(ycolumns)/len(ycolumns)
     return midy, midx
 
-def updateDict(centercoords, cellcoords, height, width, cellradius = 70):
+### ADDED ###
+### GLOBAL VARIABLES
+window_size = 140
+winW = 28
+winH = 28
+smallwindow_step = 28
+radius = 70
+smallwindowthreshold = 0.8
+
+def getcellcount(new_image):
+    count = 0
+    for (x, y, window) in sliding_window(new_image, stepSize=smallwindow_step, windowSize=(winW, winH)):
+        if window.shape[0] != winH or window.shape[1] != winW:
+            continue
+        predictions = classify.isball(window)
+        if predictions[0] >= smallwindowthreshold:
+            count+=1
+    return count
+
+# def updateDict(centercoords, cellcoords, bounds, height, width, img, cellradius = 70):
+#     # img = cv2.imread("alteredimages.png")
+#     # plt.imshow(img)
+#     infectedlist = []
+#     counts = []
+#
+#     for bound in bounds:
+#         lowerx, higherx, lowery, highery = bound
+#         count = 0
+#
+#         for coord in centercoords:
+#             xcoord = coord[0]
+#             ycoord = coord[1]
+#
+#             if lowerx <= xcoord and xcoord <= higherx:
+#                 if lowery <= ycoord and ycoord <= highery:
+#                     count += 1
+#                     # plt.plot(xcoord, ycoord, 'ro')
+#             checkimage = img[lowerx: higherx, lowery: highery]
+#             counts.append(getcellcount(checkimage))
+#
+#         infectedlist.append(count)
+#     # plt.savefig('testlabels.jpg')
+#     return infectedlist, counts
+
+### original
+def updateDict(centercoords, cellcoords, bounds):
     # img = cv2.imread("alteredimages.png")
     # plt.imshow(img)
     infectedlist = []
 
-    for each in cellcoords:
+    for bound in bounds:
+        lowerx, higherx, lowery, highery = bound
         count = 0
-        lowerx = max(0, each[0] - cellradius)
-        higherx = min(width, each[0] + cellradius)
-
-        lowery = max(0, each[1] - cellradius)
-        highery = min(height, each[1] + cellradius)
+        # lowerx = max(0, each[0] - cellradius)
+        # higherx = min(width, each[0] + cellradius)
+        #
+        # lowery = max(0, each[1] - cellradius)
+        # highery = min(height, each[1] + cellradius)
 
         for coord in centercoords:
             xcoord = coord[0]
