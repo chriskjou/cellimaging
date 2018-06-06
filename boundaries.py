@@ -37,7 +37,15 @@ import glob
 from PIL import Image
 from getcenters import getdropcenters
 
-def everything(imagefolder, normfolder):
+def removeinfected(folder):
+    actual = []
+    for each in folder:
+        temp = each.split(".")[0]
+        if temp[-3] == '2':
+            actual.append(each)
+    return actual
+
+def everything(imagefolder):
     is_training = False
     image_class = 0
 
@@ -51,6 +59,8 @@ def everything(imagefolder, normfolder):
     # testfiles = glob.glob("boundary/*")
     # csvfiles = glob.glob("csvs/*")
     testfiles = glob.glob(imagefolder)
+    testfiles = removeinfected(testfiles)
+    print("TESTFILES: " + str(testfiles))
 
     # print("TESTFILES: " + str(testfiles))
     # print("CSVFILES: " + str(csvfiles))
@@ -176,18 +186,22 @@ def everything(imagefolder, normfolder):
     imageids = []
     cellnum = []
     infected = []
-    start = normfolder.split("/")[-2]
+    # start = normfolder.split("/")[-2]
     for i in files:
         # append csv of centers #need to alter when more than one
-        temp = i.split(".")
-        imgnamefirst = temp[0]
-        ending = temp[1]
-        imgname = imgnamefirst.split("/")[-1]
-        search = start + "/" + imgname + "." + ending
-
-        imgnamefirst = i.split(".")[0]
-        imgname = imgnamefirst.split("/")[-1]
+        # temp = i.split(".")
+        # imgnamefirst = temp[0]
+        # ending = temp[1]
+        # imgname = imgnamefirst.split("/")[-1]
+        # search = start + "/" + imgname + "." + ending
+        #
+        # imgnamefirst = i.split(".")[0]
+        # imgname = imgnamefirst.split("/")[-1]
         # cellcoords, bounds = H.screenshot(imgname, sizedict[i][0])
+
+        temp = i.split(".")[0]
+        ending = i.split(".")[1]
+        search = temp[:-3] + "1t" + temp[-1] + "." + ending
         print("SEARCH")
         print(search)
         cellcoords, bounds = getdropcenters(search, sizedict[i][0])

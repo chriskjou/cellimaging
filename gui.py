@@ -8,14 +8,14 @@ import time
 
 def callback():
     print("Image Folder: " + folder_path.get())
-    print("Infected Folder: " + infected_folder_path.get())
+    # print("Infected Folder: " + infected_folder_path.get())
     # print("CSV Folder: " + csv_folder_path.get())
     print("running...")
     t0 = time.time()
     folder = folder_path.get().split("/")[-1] + "/*"
-    infectfolder = infected_folder_path.get().split("/")[-1] + "/*"
+    # infectfolder = infected_folder_path.get().split("/")[-1] + "/*"
     # csvfolder = csv_folder_path.get().split("/")[-1] + "/*"
-    imageids, cellnums, infected = boundaries.everything(infectfolder, folder)
+    imageids, cellnums, infected = boundaries.everything(folder)
     # cellcount = find.foreachfile(folder, infectfolder, csvfolder, sizedict)
     # imageids, cellnums, infected, cellcount = boundaries.everything(infectfolder, folder, csvfolder)
     returncsv(imageids, cellnums, infected, infected)
@@ -62,13 +62,13 @@ lbl1.grid(row=0, column=1)
 button2 = Button(text="Browse", command=browse_button)
 button2.grid(row=0, column=3)
 
-infected_folder_path = StringVar()
-infected = Label(text="Select Infected Folder", font='Helvetica 13 bold')
-infected.grid(row=1, column=0)
-lbl2 = Label(master=root,textvariable=infected_folder_path)
-lbl2.grid(row=1, column=1)
-button3 = Button(text="Browse", command=infectedbrowse_button)
-button3.grid(row=1, column=3)
+# infected_folder_path = StringVar()
+# infected = Label(text="Select Infected Folder", font='Helvetica 13 bold')
+# infected.grid(row=1, column=0)
+# lbl2 = Label(master=root,textvariable=infected_folder_path)
+# lbl2.grid(row=1, column=1)
+# button3 = Button(text="Browse", command=infectedbrowse_button)
+# button3.grid(row=1, column=3)
 
 # csv_folder_path = StringVar()
 # csvs = Label(text="Select CSV Folder", font='Helvetica 13 bold')
@@ -79,6 +79,6 @@ button3.grid(row=1, column=3)
 # button4.grid(row=2, column=3)
 
 submit = Button(text="Submit", width=10, command=callback)
-submit.grid(row=2, column=3)
+submit.grid(row=1, column=3)
 
 mainloop()
