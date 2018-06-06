@@ -15,10 +15,10 @@ def callback():
     folder = folder_path.get().split("/")[-1] + "/*"
     # infectfolder = infected_folder_path.get().split("/")[-1] + "/*"
     # csvfolder = csv_folder_path.get().split("/")[-1] + "/*"
-    imageids, cellnums, infected = boundaries.everything(folder)
+    imageids, cellnums, infected, cells = boundaries.everything(folder)
     # cellcount = find.foreachfile(folder, infectfolder, csvfolder, sizedict)
     # imageids, cellnums, infected, cellcount = boundaries.everything(infectfolder, folder, csvfolder)
-    returncsv(imageids, cellnums, infected, infected)
+    returncsv(imageids, cellnums, infected, cells)
     t1 = time.time()
     print("total time: " + str(round(t1-t0)))
     root.destroy()
@@ -27,9 +27,9 @@ def returncsv(imageids, cellnums, infected, cellcount):
     sub = pd.DataFrame()
     sub['ImageId'] = imageids
     sub['Cell #'] = cellnums
-    # sub['Total'] = cellcount
+    sub['Total'] = cellcount
     sub['Infected'] = infected
-    # sub['Viability (% Infected)'] = 1 - sub['Infected']/sub['Total']
+    sub['Viability (% Infected)'] = 1 - sub['Infected']/sub['Total']
     csvname = "outputcsvs/" + datetime.now().strftime('%Y-%m-%d=%H-%M-%S') + '.csv'
     sub.to_csv(csvname, index=False)
     print("finished exporting to " + csvname + "...")

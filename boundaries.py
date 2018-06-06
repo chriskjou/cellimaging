@@ -36,6 +36,7 @@ import tensorflow as tf
 import glob
 from PIL import Image
 from getcenters import getdropcenters
+from canny import getbounds
 
 def removeinfected(folder):
     actual = []
@@ -186,6 +187,7 @@ def everything(imagefolder):
     imageids = []
     cellnum = []
     infected = []
+    cells = []
     # start = normfolder.split("/")[-2]
     for i in files:
         # append csv of centers #need to alter when more than one
@@ -210,6 +212,7 @@ def everything(imagefolder):
 
         print("bounds: ")
         print(bounds)
+        cells.extend(getbounds(search, bounds))
         infectedperdropdict[i] = H.updateDict(filesdict[i], cellcoords, bounds)
         print("infectedperdropdict[i]: ")
         print(infectedperdropdict[i])
@@ -259,7 +262,7 @@ def everything(imagefolder):
     # print("INFECTEDPERDROPDICT")
     # print(infectedperdropdict)
 
-    return imageids, cellnum, infected#, cells
+    return imageids, cellnum, infected, cells
 
 # print(everything("infected/*", "csvs/*"))
 # print(everything("infectedtif/*", "csvs/*"))

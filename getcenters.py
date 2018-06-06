@@ -4,11 +4,12 @@ import argparse
 import math
 from skimage.morphology import reconstruction
 import matplotlib.pyplot as plt
+from datetime import datetime
 import glob
 
 #== Parameters =======================================================================
 BLUR = 21 #21
-CANNY_THRESH_1 = 80 #10
+CANNY_THRESH_1 = 50 #10
 CANNY_THRESH_2 = 115 #200
 MASK_DILATE_ITER = 10 #10
 MASK_ERODE_ITER = 10 #10
@@ -74,20 +75,41 @@ def getdropcenters(image, sizedict):
     centers = []
     bounds = []
     plt.imshow(im)
+    temp = []
     for c in contours_circles:
         (x,y),radius = cv2.minEnclosingCircle(c)
-        plt.plot(x, y, 'ro')
-        centers.append((round(x),round(y),radius))
+        temp.append((x,y,radius))
 
-        lowerx = max(0, x - radius)
-        higherx = min(width, x + radius)
-        lowery = max(0, y - radius)
-        highery = min(height, y + radius)
-        bounds.append((lowerx, higherx, lowery, highery))
+    count = 1
+    length = len(contours_circles)
+    actual = [1] * len(contours_circles)
+    for i in range(length):
+        x,y,r = temp[i]
+        for j in range(i+1, length):
+            x1, y1, r2 = temp[j]
+            if abs(x-x1) < r and abs(y-y1) < r:
+                if actual[j] == 1:
+                    actual[j] = 0
+    # print(actual)
 
-    plt.savefig("centers/centers.jpg")
-    print("CENTERS IN GETCENTERS: ")
+    for c in range(length):
+        if actual[c] == 1:
+            x,y,radius = temp[c]
+            plt.plot(x, y, 'ro')
+            centers.append((round(x),round(y),round(radius)))
+
+            lowerx = max(0, x - radius)
+            higherx = min(width, x + radius)
+            lowery = max(0, y - radius)
+            highery = min(height, y + radius)
+            bounds.append((round(lowery), round(highery), round(lowerx), round(higherx)))
+
+            plt.text(x, y + 5, str(count))
+            count +=1
+
+    plt.savefig("centers/centers" + datetime.now().strftime('%Y-%m-%d=%H-%M-%S') + ".jpg")
+    print(centers)
     print("LENGTH OF CENTERS: " + str(len(centers)))
     return centers, bounds
-
+#
 # getdropcenters("trial.tif", (1040, 1392))
