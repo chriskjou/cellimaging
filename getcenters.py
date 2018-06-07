@@ -32,17 +32,7 @@ def getdropcenters(image, sizedict, entire):
     im = cv2.imread(image)
     im = fillhole(im)
     contours, _ = canny(im, CANNY_THRESH_1, CANNY_THRESH_2)
-    # gray = cv2.cvtColor(im,cv2.COLOR_BGR2GRAY)
-
-    # #-- Edge detection -------------------------------------------------------------------
-    # edges = cv2.Canny(gray, CANNY_THRESH_1, CANNY_THRESH_2)
-    # edges = cv2.dilate(edges, None)
-    # edges = cv2.erode(edges, None)
-    #
-    # #-- Find contours in edges, sort by area ---------------------------------------------
-    # contour_info = []
-    # _, contours, _ = cv2.findContours(edges, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
-
+    
     contours_area = []
     # calculate area and filter into new array
     for con in contours:
