@@ -178,7 +178,8 @@ def everything(imagefolder):
         temp = i.split(".")[0]
         ending = i.split(".")[1]
         search = temp[:-3] + "1t" + temp[-1] + "." + ending
-        cellcoords, bounds = getdropcenters(search, sizedict[i][0])
+        print(search)
+        cellcoords, bounds = getdropcenters(search, sizedict[i][0], i)
         cells.extend(getbounds(search, bounds))
         infectedperdropdict[i] = H.updateDict(filesdict[i], cellcoords, bounds)
         cellnums = len(infectedperdropdict[i])

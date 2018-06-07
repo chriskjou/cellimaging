@@ -6,9 +6,10 @@ from skimage.morphology import reconstruction
 import matplotlib.pyplot as plt
 from datetime import datetime
 import glob
+from canny import canny
 
 #== Parameters =======================================================================
-BLUR = 21 #21
+# BLUR = 21 #21
 CANNY_THRESH_1 = 50 #10
 CANNY_THRESH_2 = 115 #200
 MASK_DILATE_ITER = 10 #10
@@ -21,24 +22,27 @@ def fillhole(img):
     mask= img
     return reconstruction(seed,mask,method='erosion').astype(np.uint8)
 
-def getdropcenters(image, sizedict):
+def getdropcenters(image, sizedict, entire):
+    temp = entire.split("/")[-1]
+    name = temp.split(".")[0]
     height, width = sizedict[0], sizedict[1]
     #== Processing =======================================================================
     title = image.split(".")[0]
     #-- Read image -----------------------------------------------------------------------
     im = cv2.imread(image)
     im = fillhole(im)
-    gray = cv2.cvtColor(im,cv2.COLOR_BGR2GRAY)
+    contours, _ = canny(im, CANNY_THRESH_1, CANNY_THRESH_2)
+    # gray = cv2.cvtColor(im,cv2.COLOR_BGR2GRAY)
 
-    #-- Edge detection -------------------------------------------------------------------
-    edges = cv2.Canny(gray, CANNY_THRESH_1, CANNY_THRESH_2)
-    edges = cv2.dilate(edges, None)
-    edges = cv2.erode(edges, None)
+    # #-- Edge detection -------------------------------------------------------------------
+    # edges = cv2.Canny(gray, CANNY_THRESH_1, CANNY_THRESH_2)
+    # edges = cv2.dilate(edges, None)
+    # edges = cv2.erode(edges, None)
+    #
+    # #-- Find contours in edges, sort by area ---------------------------------------------
+    # contour_info = []
+    # _, contours, _ = cv2.findContours(edges, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
 
-    #-- Find contours in edges, sort by area ---------------------------------------------
-    contour_info = []
-    _, contours, _ = cv2.findContours(edges, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
-    
     contours_area = []
     # calculate area and filter into new array
     for con in contours:
@@ -92,5 +96,6 @@ def getdropcenters(image, sizedict):
             plt.text(x, y + 5, str(count))
             count +=1
 
-    plt.savefig("centers/centers" + datetime.now().strftime('%Y-%m-%d=%H-%M-%S') + ".jpg")
+    plt.savefig("centers/" + name + "centers" + ".jpg")
+    plt.clf()
     return centers, bounds
