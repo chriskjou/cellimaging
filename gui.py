@@ -4,17 +4,19 @@ import boundaries
 import pandas as pd
 from datetime import datetime
 import time
+import os
 
 def callback():
     print("Image Folder: " + folder_path.get())
-    print("running...")
-    # t0 = time.time()
+    print("\nrunning...\n")
+    t0 = time.time()
     folder = folder_path.get().split("/")[-1] + "/*"
     imageids, cellnums, infected, cells = boundaries.everything(folder)
     returncsv(imageids, cellnums, infected, cells)
-    # t1 = time.time()
-    # print("total time: " + str(round(t1-t0)))
+    t1 = time.time()
+    print("total time: " + str(round(t1-t0)) + " seconds")
     root.destroy()
+    sys.exit()
 
 def returncsv(imageids, cellnums, infected, cellcount):
     sub = pd.DataFrame()
@@ -22,10 +24,13 @@ def returncsv(imageids, cellnums, infected, cellcount):
     sub['Cell #'] = cellnums
     sub['Total'] = cellcount
     sub['Infected'] = infected
-    sub['Viability (% Alive)'] = 1 - sub['Infected']/sub['Total']
+    sub['Viability (%)'] = (1 - sub['Infected']/sub['Total']) * 100
+    directory = "outputcsvs"
+    if not os.path.exists(directory):
+        os.makedirs(directory)
     csvname = "outputcsvs/" + datetime.now().strftime('%Y-%m-%d=%H-%M-%S') + '.csv'
     sub.to_csv(csvname, index=False)
-    print("finished exporting to " + csvname + "...")
+    print("\nfinished exporting to " + csvname + "...")
 
 def browse_button():
     global folder_path
@@ -34,7 +39,7 @@ def browse_button():
     print(filename)
 
 root = Tk()
-
+root.title('cell counter')
 folder_path = StringVar()
 images = Label(text="Select Image Folder",font='Helvetica 13 bold')
 images.grid(row=0, column=0)

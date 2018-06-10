@@ -27,17 +27,17 @@ def howmany(preds):
     labels = [8, 5, 4, 1, 7, 6, 3, 2, 0]
     return labels[maxindex]
 
-def cellnum(image_data):
+def classifyinfectedcellnum(image_data):
   with tf.Session(graph=g2) as sess2:
     softmax_tensor = sess2.graph.get_tensor_by_name('g2/final_result:0')
     predictions = sess2.run(softmax_tensor, {'g2/DecodeJpeg:0': image_data})
 
     return howmany(predictions[0])
 
-def countinfectedcells(img, bounds):
-    image = cv2.imread(img)
-    counts = []
-    for bound in bounds:
-        lowery, highery, lowerx, higherx = bound
-        counts.append(cellnum(image[lowery: highery, lowerx: higherx]))
-    return counts
+# def countinfectedcells(img, bounds):
+#     image = cv2.imread(img)
+#     counts = []
+#     for bound in bounds:
+#         lowery, highery, lowerx, higherx = bound
+#         counts.append(cellnum(image[lowery: highery, lowerx: higherx]))
+#     return counts

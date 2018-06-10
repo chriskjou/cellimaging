@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 import glob
 from canny import canny
+import os
 
 #== Parameters =======================================================================
 # BLUR = 21 #21
@@ -87,6 +88,10 @@ def getdropcenters(image, sizedict, entire):
             plt.text(x, y + 5, str(count))
             count +=1
     # print("BOUNDS: " + str(bounds))
+    
+    directory = "centers"
+    if not os.path.exists(directory):
+        os.makedirs(directory)
     plt.savefig("centers/" + name + "centers" + ".jpg")
     plt.clf()
     return centers, bounds
