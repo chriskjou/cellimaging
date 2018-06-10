@@ -211,7 +211,7 @@ def updateDict(centercoords, cellcoords, bounds):
     infectedlist = []
 
     for bound in bounds:
-        lowerx, higherx, lowery, highery = bound
+        lowery, highery, lowerx, higherx = bound
         count = 0
 
         for coord in centercoords:

@@ -23,17 +23,49 @@ def canny(image, CANNY_THRESH_1, CANNY_THRESH_2):
 def getcellnum(image):
 
 	#== Parameters =======================================================================
-	CANNY_THRESH_1 = 100 #10
+	CANNY_THRESH_1 = 200 #10
 	CANNY_THRESH_2 = 300 #200
 
 	contours, _ = canny(image, CANNY_THRESH_1, CANNY_THRESH_2)
-	
+
+	print("CONTOURS:" + str(len(contours)))
+
 	contours_area = []
-	# calculate area and filter into new array
 	for con in contours:
-	    area = cv2.contourArea(con)
-	    if 50 < area < 1000:
-	        contours_area.append(con)
+		area = cv2.contourArea(con)
+		if 50 < area < 5000:
+			contours_area.append(con)
+
+	cv2.drawContours(image, contours, -1, (0, 0, 255), 3)
+	cv2.imshow("all contours", image)
+	cv2.waitKey(0)
+	plt.imshow(image)
+	count = 1
+	for con in contours_area:
+		(x,y),radius = cv2.minEnclosingCircle(con)
+		plt.plot(x, y, 'ro')
+		plt.text(x, y + 5, str(count))
+		count += 1
+	plt.savefig("adaptivecanny.jpg")
+	plt.clf()
+
+	print("CONTOURS AREAS:" + str(len(contours_area)))
+
+	contours_circles = []
+	for con in contours_area:
+		perimeter = cv2.arcLength(con, True)
+		area = cv2.contourArea(con)
+		if perimeter == 0:
+			break
+		circularity = 4*math.pi*(area/(perimeter*perimeter))
+		if 0.5 < circularity and circularity < 1.5:
+			contours_circles.append(con)
+
+	print("CONTOURS CIRCLES:" + str(len(contours_circles)))
+
+	cv2.drawContours(image, contours, -1, (0, 255, 0), 3)
+	cv2.imshow("all contours", image)
+	cv2.waitKey(0)
 
 	return len(contours_area)
 
@@ -77,12 +109,33 @@ def preprocess(img):
 	masked = (mask_stack * img) + ((1-mask_stack) * MASK_COLOR) # Blend
 	masked = (masked * 255).astype('uint8')                     # Convert back to 8-bit
 
+	# cv2.imshow("masked", masked)
+	# cv2.waitKey(0)
+
 	return getcellnum(masked)
 
 def getbounds(image, bounds):
 	img = cv2.imread(image)
 	toreturn = []
+	print("IMG SHAPE: " + str(img.shape))
 	for bound in bounds:
 		lowery, highery, lowerx, higherx = bound
+		print(bound)
 		toreturn.append(preprocess(img[lowery: highery, lowerx: higherx]))
 	return toreturn
+# 
+# img = cv2.imread("adaptivemean.png")
+# print(getcellnum(img))
+# img = cv2.imread("cell2.png")
+# print(preprocess(img))
+
+# img = cv2.imread("cell4inside.png")
+#
+# # remove noise
+# dst = cv2.fastNlMeansDenoisingColored(img,None,5,5,7,21)
+# # plt.subplot(121),plt.imshow(img)
+# # plt.subplot(122),plt.imshow(dst)
+# # plt.show()
+#
+# print(preprocess(img))
+# print(preprocess(dst))

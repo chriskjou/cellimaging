@@ -32,7 +32,7 @@ def getdropcenters(image, sizedict, entire):
     im = cv2.imread(image)
     im = fillhole(im)
     contours, _ = canny(im, CANNY_THRESH_1, CANNY_THRESH_2)
-    
+
     contours_area = []
     # calculate area and filter into new array
     for con in contours:
@@ -73,19 +73,20 @@ def getdropcenters(image, sizedict, entire):
 
     for c in range(length):
         if actual[c] == 1:
-            x,y,radius = temp[c]
+            x,y,r = temp[c]
+            radius = r /math.sqrt(2)
             plt.plot(x, y, 'ro')
             centers.append((round(x),round(y),round(radius)))
 
-            lowerx = max(0, x - radius)
-            higherx = min(width, x + radius)
-            lowery = max(0, y - radius)
-            highery = min(height, y + radius)
-            bounds.append((round(lowery), round(highery), round(lowerx), round(higherx)))
+            lowerx = max(0, round(x - radius))
+            higherx = min(width, round(x + radius))
+            lowery = max(0, round(y - radius))
+            highery = min(height, round(y + radius))
+            bounds.append((lowery, highery, lowerx, higherx))
 
             plt.text(x, y + 5, str(count))
             count +=1
-
+    # print("BOUNDS: " + str(bounds))
     plt.savefig("centers/" + name + "centers" + ".jpg")
     plt.clf()
     return centers, bounds
