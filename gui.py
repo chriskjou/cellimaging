@@ -22,7 +22,6 @@ def returncsv(imageids, cellnums, infected, cellcount):
     sub['Cell #'] = cellnums
     sub['Total'] = cellcount
     sub['Infected'] = infected
-    sub['% Infected'] = sub['Infected']/sub['Total']
     sub['Viability (% Alive)'] = 1 - sub['Infected']/sub['Total']
     csvname = "outputcsvs/" + datetime.now().strftime('%Y-%m-%d=%H-%M-%S') + '.csv'
     sub.to_csv(csvname, index=False)
