@@ -37,8 +37,8 @@ import glob
 from PIL import Image
 from getcenters import getdropcenters
 from canny import getbounds
-from classify import countcells
-from classify2 import countinfectedcells
+from classify import classifycellnum
+from classify2 import classifyinfectedcellnum
 
 def removeinfected(folder):
     actual = []
@@ -58,7 +58,7 @@ def everything(imagefolder):
     IMG_CHANNELS = 3
 
     testfiles = glob.glob(imagefolder)
-    testfiles = removeinfected(testfiles)
+    # testfiles = removeinfected(testfiles)
     print("TESTFILES: " + str(testfiles))
 
     warnings.filterwarnings('ignore', category=UserWarning, module='skimage')
@@ -179,59 +179,61 @@ def everything(imagefolder):
     infected = []
     cells = []
     count = 1
-    for i in files:
-        print("classifying ", str(count), " of ", len(testfiles))
-        count+=1
-
-        # get file names
-        temp = i.split(".")[0]
-        ending = i.split(".")[1]
-        search = temp[:-3] + "1t" + temp[-1] + "." + ending
-
-        # get cell centers
-        cellcoords, bounds = getdropcenters(search, sizedict[i][0], i)
-        cells.extend(countcells(search, bounds))
-
-        # ONLY CHOOSE ONE OF THE FOLLOWING THREE TO UNCOMMENT
-        ### (1)
-        # with cannny threshold
-        # cells.extend(getbounds(search, bounds))
-
-        ### (2)
-        # with google inception v3
-        infectedcount = countinfectedcells(i, bounds)
-        infectedperdropdict[i] = infectedcount
-        infected.extend(infectedcount)
-
-        ### (3)
-        # using keras model
-        # infectedperdropdict should be a dictionary
-        # key: each image
-        # value: dictionary where key is cell # and value is infected cell count
-        # infectedperdropdict[i] = H.updateDict(filesdict[i], cellcoords, bounds)
-        # infected.extend(infectedperdropdict[i])
-        # ONLY CHOOSE ONE OF THE ABOVE THREE TO UNCOMMENT
-
-        # updating count
-        cellnums = len(infectedperdropdict[i])
-        imageids.extend([i] * cellnums)
-        generatenums = [j for j in range(1, cellnums + 1)]
-        cellnum.extend(generatenums)
+    # for i in files:
+    #     print("classifying ", str(count), " of ", len(testfiles))
+    #     count+=1
+    #
+    #     # get file names
+    #     temp = i.split(".")[0]
+    #     ending = i.split(".")[1]
+    #     search = temp[:-3] + "1t" + temp[-1] + "." + ending
+    #
+    #     # get cell centers
+    #     cellcoords, bounds = getdropcenters(search, sizedict[i][0], i)
+    #     cells.extend(classifycellnum(search, bounds))
+    #
+    #     # ONLY CHOOSE ONE OF THE FOLLOWING THREE TO UNCOMMENT
+    #     ### (1)
+    #     # with cannny threshold
+    #     # cells.extend(getbounds(search, bounds))
+    #
+    #     ### (2)
+    #     # with google inception v3
+    #     infectedcount = classifyinfectedcellnum(i, bounds)
+    #     infectedperdropdict[i] = infectedcount
+    #     infected.extend(infectedcount)
+    #
+    #     ### (3)
+    #     # using keras model
+    #     # infectedperdropdict should be a dictionary
+    #     # key: each image
+    #     # value: dictionary where key is cell # and value is infected cell count
+    #     # infectedperdropdict[i] = H.updateDict(filesdict[i], cellcoords, bounds)
+    #     # infected.extend(infectedperdropdict[i])
+    #     # ONLY CHOOSE ONE OF THE ABOVE THREE TO UNCOMMENT
+    #
+    #     # updating count
+    #     cellnums = len(infectedperdropdict[i])
+    #     imageids.extend([i] * cellnums)
+    #     generatenums = [j for j in range(1, cellnums + 1)]
+    #     cellnum.extend(generatenums)
 
     # UNCOMMENT BELOW FOR CSV for rle encoding with total number per image
-    # sub = pd.DataFrame()
-    # sub['ImageId'] = new_test_ids
-    # counts = sub['ImageId'].value_counts()
-    # uniqueids = sub['ImageId'].unique()
-    # cellcounter = []
-    # for i in uniqueids:
-    #     cellcounter.append(counts[i])
-    # actual = pd.DataFrame()
-    # actual["IMAGE"] = uniqueids
-    # actual["count"] = cellcounter
-    # # sub['EncodedPixels'] = pd.Series(rles).apply(lambda x: ' '.join(str(y) for y in x)
-    # actual.to_csv('cellcount'+str(image_class)+'.csv', index=False)
-    # print("Done adding cell counts to CSV.")
+    sub = pd.DataFrame()
+    sub['ImageId'] = new_test_ids
+    counts = sub['ImageId'].value_counts()
+    uniqueids = sub['ImageId'].unique()
+    cellcounter = []
+    for i in uniqueids:
+        cellcounter.append(counts[i])
+    actual = pd.DataFrame()
+    actual["IMAGE"] = uniqueids
+    actual["count"] = cellcounter
+    # sub['EncodedPixels'] = pd.Series(rles).apply(lambda x: ' '.join(str(y) for y in x)
+    actual.to_csv('cellcountwellplate.csv', index=False)
+    print("Done adding cell counts to CSV.")
     # UNCOMMENT ABOVE FOR CSV for rle encoding with total number per image
 
     return imageids, cellnum, infected, cells
+
+print(everything("wellplate/*"))

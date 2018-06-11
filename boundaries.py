@@ -72,6 +72,9 @@ def everything(imagefolder):
 
     print("\npredicting based on the model...\n")
 
+    cells = []
+    infected = []
+
     for i in testfiles:
         infectedperdropdict.setdefault(i, [])
         print("classifying ", str(count), " of ", len(testfiles))
@@ -85,9 +88,6 @@ def everything(imagefolder):
         # get cell centers
         cellcoords, bounds = getdropcenters(search, sizedict[i][0], i)
 
-        cells = []
-        infected = []
-
         for bound in bounds:
             lowery, highery, lowerx, higherx = bound
 
@@ -100,7 +100,7 @@ def everything(imagefolder):
             cells.append(classifycellnum(subbright))
             infected.append(classifyinfectedcellnum(subinfect))
 
-        cellcount = len(infected)
+        cellcount = len(bounds)
         imageids.extend([i] * cellcount)
         generatenums = [j for j in range(1, cellcount + 1)]
         cellnum.extend(generatenums)
