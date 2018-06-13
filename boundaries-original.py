@@ -236,4 +236,4 @@ def everything(imagefolder):
 
     return imageids, cellnum, infected, cells
 
-print(everything("wellplate/*"))
+print(everything("wellplateneutral/*"))
