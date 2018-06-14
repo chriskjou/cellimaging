@@ -2,8 +2,11 @@
 
 ### USER RUNS: python gui.py
 gui.py: runs user input for image folder with GUI
+
     - for each timepoint/location, must have two corresponding images (brightfield and fluoresecent)
+    
     - naming of files must end with c1t* for brightfield and c2t* for fluorescent, otherwise same
+    
     - note: folder of images MUST be within the 'cellimaging' folder directory
 
 ### BEHIND THE SCENES:
