@@ -3,16 +3,17 @@
 ### USER RUNS: python gui.py
 gui.py: runs user input for image folder with GUI
 
-    - for each timepoint/location, must have two corresponding images (brightfield and fluoresecent)
+- for each timepoint/location, must have two corresponding images (brightfield and fluoresecent)
     
-    - naming of files must end with c1t* for brightfield and c2t* for fluorescent, otherwise same
+- naming of files must end with c1t* for brightfield and c2t* for fluorescent, otherwise same
     
-    - note: folder of images MUST be within the 'cellimaging' folder directory
+- note: folder of images MUST be within the 'cellimaging' folder directory
 
 ### BEHIND THE SCENES:
 
 #### getting cell centers (run either getCounts.txt for manual OR getcenters.py)
 getCounts.txt: macro for ImageJ to get coordinates of selected points (for centers of droplets)
+
 getcenters.py: automated cell selection and numbering with Canny edge detection and Hough Circle transform with thresholded area and concavity
 
 #### before machine learning
