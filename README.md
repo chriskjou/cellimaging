@@ -4,7 +4,7 @@
 
 Make sure you have [Python](https://www.python.org/) installed, then install [Tensorflow](https://www.tensorflow.org/install/) on system, then clone this repo.
 
-Image classification with transfer learning from Google's Inveption v3 already done with models and labels uploaded in Dropbox links for [brightfield] (https://www.dropbox.com/s/5ulmpibmutedal5/logs-brightfield.zip?dl=0) and [fluorescent](https://www.dropbox.com/s/ezrkoq98ucwd2mu/logs-fluorescence.zip?dl=0). Both folders must be unzipped and placed directly in the cellimaging folder as indicated below.
+Image classification with transfer learning from Google's Inveption v3 already done with models and labels uploaded in Dropbox links for [brightfield](https://www.dropbox.com/s/5ulmpibmutedal5/logs-brightfield.zip?dl=0) and [fluorescent](https://www.dropbox.com/s/ezrkoq98ucwd2mu/logs-fluorescence.zip?dl=0). Both folders must be unzipped and placed directly in the cellimaging folder as indicated below.
 
 ```
 |
