@@ -1,6 +1,35 @@
 # cellimaging
 
-### USER RUNS: python gui.py
+## Installation
+
+Make sure you have [Python](https://www.python.org/) installed, then install [Tensorflow](https://www.tensorflow.org/install/) on system, then clone this repo.
+
+Image classification with transfer learning from Google's Inveption v3 already done with models and labels uploaded in Dropbox links for [brightfield] (https://www.dropbox.com/s/5ulmpibmutedal5/logs-brightfield.zip?dl=0) and [fluorescent](https://www.dropbox.com/s/ezrkoq98ucwd2mu/logs-fluorescence.zip?dl=0). Both folders must be unzipped and placed directly in the cellimaging folder as indicated below.
+
+```
+|
+---- /cellimaging
+|    |
+|    |
+|    ---- /logs-brighfield
+|    |    trained_graph.pb
+|    |    trained_labels.txt
+|    |
+|    ---- /log-fluorescence
+|    |    trained_graph.pb
+|    |    trained_labels.txt
+|    |
+|    ---- /images
+|    |    firstimagec1t1.tiff
+|    |    firstimagec12t1.tiff
+|    |    secondimagec1t2.tiff
+|    |    secondimagec12t2.tiff
+|         ...
+|
+```
+
+## Usage
+### python gui.py
 gui.py: runs user input for image folder with GUI
 
 - for each timepoint/location, must have two corresponding images (brightfield and fluoresecent)
@@ -34,9 +63,3 @@ classify2.py: identifies fluoresecent photos
 convert.py: 90, 180, 270 rotation with reflection (vertical and horizontal) for initial manual labelling
 
 helpers.py: required helper functions for boundaries
-
-#### TBA: creating executable from only gui.py
-
-pretrained models and labels from inception:
-- brightfield: https://www.dropbox.com/s/5ulmpibmutedal5/logs-brightfield.zip?dl=0
-- fluorescent: https://www.dropbox.com/s/ezrkoq98ucwd2mu/logs-fluorescence.zip?dl=0
