@@ -22,15 +22,9 @@ for j in pngs:
     oneeighty = rotate(img, 180)
     twoseventy = rotate(img, 270)
 
-    cv2.imwrite("extra" + str(count) + ".jpg", horizontal_img)
-    count+=1
-    cv2.imwrite("extra" + str(count) + ".jpg", vertical_img)
-    count+=1
-    cv2.imwrite("extra" + str(count) + ".jpg", ninety)
-    count+=1
-    cv2.imwrite("extra" + str(count) + ".jpg", oneeighty)
-    count+=1
-    cv2.imwrite("extra" + str(count) + ".jpg", twoseventy)
-    count+=1
+    augment_photos = [horizontal_img, vertical_img, ninety, oneeighty, twoseventy]
+    
+    for index in range(len(augment_photos)):
+        cv2.imwrite("extra" + str(count) + ".jpg", augment_photos[index])
 
 print("finished.")
